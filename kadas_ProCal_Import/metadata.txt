@@ -1,0 +1,24 @@
+[general]
+name=KADAS ProCal Funkschatten Import
+qgisMinimumVersion=3.0
+qgisMaximumVersion=3.99
+description=Import ProCal exports into KADAS to show radio extend
+about=KADAS ProCal Funkschatten Import
+version=0.1.0
+author=Hptm Gyger Nathan
+email=nathan@gygers.ch
+
+
+changelog=
+ Rev 0.0.1 (05.11.2023)
+  - Initial release
+
+# Tags are comma separated with spaces allowed
+tags=
+
+homepage=
+tracker=
+repository=
+icon=icon.png
+experimental=False
+deprecated=False
