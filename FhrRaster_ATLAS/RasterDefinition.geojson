@@ -1,0 +1,19 @@
+{
+"type": "FeatureCollection",
+"name": "RasterDefinition",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2056" } },
+"features": [
+{ "type": "Feature", "properties": { "RasterName": "SÄNTISALP - OST", "Scale": 10000, "PageSize": "A3", "PageOrientation": "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2741000.0, 1234200.0 ] } },
+{ "type": "Feature", "properties": { "RasterName": "SÄNTISALP - WEST", "Scale": 10000, "PageSize": "A3", "PageOrientation": "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2738556.240753975696862, 1232665.969238309422508 ] } },
+{ "type": "Feature", "properties": { "RasterName": "ALPLI", "Scale": 10000, "PageSize": "A3", "PageOrientation": "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2742700.0, 1232150.0 ] } },
+{ "type": "Feature", "properties": { "RasterName": "HINTERE AU", "Scale": 5000, "PageSize": "A4", "PageOrientation": "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2734700.0, 1246000.0 ] } },
+{ "type": "Feature", "properties": { "RasterName": "BREITFELD", "Scale": 5000, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2740150.0, 1252750.0 ] } },
+{ "type": "Feature", "properties": { "RasterName": "ANSCHWILEN", "Scale": 5000, "PageSize": "A3", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2740250.0, 1254400.0 ] } },
+{ "type": "Feature", "properties": { "RasterName": "BERNHARDZELL", "Scale": 5000, "PageSize": "A3", "PageOrientation": "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2742350.0, 1260800.0 ] } },
+{ "type": "Feature", "properties": { "RasterName": "HOFEN", "Scale": 2500, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2747777.896395595744252, 1259301.114612925797701 ] } },
+{ "type": "Feature", "properties": { "RasterName": "Eisigeli", "Scale": 5000, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2736490.091441761702299, 1244710.064364346209913 ] } },
+{ "type": "Feature", "properties": { "RasterName": "A4 Hoch ", "Scale": 2500, "PageSize": "A4", "PageOrientation": "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2746281.554509941954166, 1259285.853604402858764 ] } },
+{ "type": "Feature", "properties": { "RasterName": "A4 Quer", "Scale": 25000, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2746034.153971890453249, 1258715.403195216786116 ] } },
+{ "type": "Feature", "properties": { "RasterName": "A3 Quer", "Scale": 10000, "PageSize": "A3", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2746191.46015261253342, 1257734.00045578670688 ] } }
+]
+}
