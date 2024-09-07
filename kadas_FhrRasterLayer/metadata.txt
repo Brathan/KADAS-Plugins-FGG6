@@ -1,0 +1,24 @@
+[general]
+name=Führungsraster Schweiz
+qgisMinimumVersion=3.0
+qgisMaximumVersion=3.99
+description=Fügt dem aktuellen Projekt ein Layer mit allen Rastern hinzu. 
+about=GYGER
+version=0.1.0
+author=Hptm Gyger Nathan
+email=nathan@gygers.ch
+
+
+changelog=
+ Rev 0.0.1 (05.11.2023)
+  - Initial release
+
+# Tags are comma separated with spaces allowed
+tags=
+
+homepage=
+tracker=
+repository=
+icon=icon.png
+experimental=False
+deprecated=False
