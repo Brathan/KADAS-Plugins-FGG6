@@ -70,7 +70,7 @@ class KadasExample(QObject):
 
         if notLoaded:
             layout.initializeDefaults()
-            QMessageBox.information(self.iface.mainWindow(), self.tr("Example plugin"), layout.name())
+            print( 'Load template form file... ' )
             with open(template_path) as f:
                 template_content = f.read()
                 doc = QDomDocument()
@@ -78,6 +78,7 @@ class KadasExample(QObject):
                 items, ok = layout.loadFromTemplate(doc, QgsReadWriteContext(), True)
                 layout.setName(layout_name)
                 project.layoutManager().addLayout(layout)
+            print( '...done')
 
         # Open the layout in the layout designer.
         self.iface.showLayoutDesigner(layout)
