@@ -59,7 +59,7 @@ def get50m(gridNumber,xy):
         return str(result_50m)
     else:      
         # Perform calculations for y
-        quot50m = (gridNumber - 25) % 1000 / 100 # input grid has 25m offset
+        quot50m = ((gridNumber - 25) % 10000) / 100 # input grid has 25m offset
         return f"{quot50m:.1f}"  # Ensures one decimal place
         
 @qgsfunction(args='auto', group='Custom')            
