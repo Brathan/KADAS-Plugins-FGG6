@@ -24,7 +24,7 @@ class KadasPlugin(QObject):
         self.iface = KadasPluginInterface.cast(iface)
 
     def initGui(self):
-        self.exampleAction = QAction(QIcon(self.tr(self.plugin_dir) + "/icons/FührungsRasterSchweiz_Icon.png"), self.tr("Add FhrRaster"))
+        self.exampleAction = QAction(QIcon(self.tr(self.plugin_dir) + "/icons/FührungsRasterSchweiz_Icon.png"), self.tr("FhrRaster Layer"))
         self.exampleAction.triggered.connect(self.__run)
         self.iface.addAction(self.exampleAction, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
 

@@ -1,5 +1,5 @@
 [general]
-name=Führungsraster Schweiz
+name=Führungsraster Schweiz Layer
 qgisMinimumVersion=3.0
 qgisMaximumVersion=3.99
 description=Fügt dem aktuellen Projekt ein Layer mit allen Rastern hinzu. 
