@@ -2,5 +2,5 @@
 
 
 def classFactory(iface):
-    from .kadas_FhrRasterATLAS import KadasExample
-    return KadasExample(iface)
+    from .FhrRasterATLAS import FhrRasterATLAS
+    return FhrRasterATLAS(iface)

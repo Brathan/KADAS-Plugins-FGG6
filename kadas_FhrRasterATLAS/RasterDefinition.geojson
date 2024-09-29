@@ -3,7 +3,8 @@
 "name": "RasterDefinition",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::2056" } },
 "features": [
-{ "type": "Feature", "properties": { "RasterName": "RENAME", "Scale": 10000, "PageSize": "A4", "PageOrientation":  "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2614490, 1211560 ] } },
-{ "type": "Feature", "properties": { "RasterName": "RENAME", "Scale":  5000, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2600950, 1199570 ] } }
+{ "type": "Feature", "properties": { "RasterName": "A4 Hoch 10000", "Scale": 10000, "PageSize": "A4", "PageOrientation":  "Portrait" }, "geometry": { "type": "Point", "coordinates": [ 2614490, 1211560 ] } },
+{ "type": "Feature", "properties": { "RasterName": "A4 Quer 5000", "Scale":  5000, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2600950, 1199570 ] } },
+{ "type": "Feature", "properties": { "RasterName": "A4 Quer 2000", "Scale":  2000, "PageSize": "A4", "PageOrientation": "Landscape" }, "geometry": { "type": "Point", "coordinates": [ 2640520.25, 1240300 ] } }
 ]
 }
