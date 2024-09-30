@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from qgis.core import QgsProject, QgsPrintLayout, QgsLayoutExporter, QgsReadWriteContext, QgsLayoutRenderContext
 from PyQt5.QtXml import QDomDocument
+from qgis.PyQt.QtGui import QColor
 
 class AtlasExporter:
     def __init__(self, dialog):      
@@ -84,6 +85,7 @@ class AtlasExporter:
                     # image settings
                     export_settings.dpi = 300
                     export_settings.imageFormat = 'tiff'
+                    export_settings.backgroundColor = QColor(0, 0, 0, 0)  # RGBA where A = 0 means fully transparent
                     export_settings.writeWorldFile = True
                     result = exporter.exportToImage(file_name, export_settings)
                 else:
