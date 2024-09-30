@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>467</width>
-    <height>197</height>
+    <width>471</width>
+    <height>249</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,10 +31,13 @@
      <x>10</x>
      <y>10</y>
      <width>451</width>
-     <height>179</height>
+     <height>231</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetDefaultConstraint</enum>
+    </property>
     <item row="0" column="0">
      <widget class="QLabel" name="label_Layer">
       <property name="layoutDirection">
@@ -48,53 +51,14 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QPushButton" name="button_close">
-      <property name="text">
-       <string>Schliessen</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="label_Export">
+     <widget class="QPushButton" name="button_NewLayer">
       <property name="text">
-       <string>Export nach:</string>
+       <string>Erstelle neuen Definitions-Layer</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QgsMapLayerComboBox" name="cb_coverageLayer"/>
-    </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="QPlainTextEdit" name="statusText">
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>40</height>
-       </size>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
+    <item row="6" column="0">
      <widget class="QPushButton" name="pb_create_layout">
       <property name="font">
        <font>
@@ -109,14 +73,115 @@
        <number>7</number>
       </property>
       <property name="text">
-       <string>PDF erstellen</string>
+       <string>Export</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="2">
+    <item row="5" column="0" colspan="2">
+     <widget class="QPlainTextEdit" name="statusText">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="plainText">
+       <string notr="true"/>
+      </property>
+      <property name="placeholderText">
+       <string notr="true">Status...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QPushButton" name="button_close">
+      <property name="text">
+       <string>Schliessen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="button_LoadStyle">
+      <property name="text">
+       <string>Lade Stil für Definitions-Layer</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
      <widget class="QgsFileWidget" name="mQgsFileWidget">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
       <property name="storageMode">
        <enum>QgsFileWidget::GetDirectory</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QComboBox" name="cb_formatSelector">
+      <property name="editable">
+       <bool>false</bool>
+      </property>
+      <property name="currentText">
+       <string>pdf</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>pdf</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>tiff</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="1">
+     <widget class="QgsMapLayerComboBox" name="cb_coverageLayer"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_Export">
+      <property name="text">
+       <string>Export nach:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_Layer_2">
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Wähle Ausgabe Datenyp:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>

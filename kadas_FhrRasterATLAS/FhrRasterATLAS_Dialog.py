@@ -21,7 +21,8 @@ from qgis.core import (Qgis,
                        QgsTextFormat,
                        QgsTextBufferSettings,
                        QgsVectorLayerSimpleLabeling,
-                       QgsExpressionContextUtils)
+                       QgsExpressionContextUtils,
+                       QgsMapLayerProxyModel)
 
 from qgis.gui import (QgsMapToolPan)
 
@@ -70,53 +71,37 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         
         # Init Components
         self.button_close.clicked.connect(self.reject)
-        self.pb_create_layout.clicked.connect(self._export_ATLAS)
-        self.cb_coverageLayer.currentIndexChanged.connect(self._coverageLayer_changed)
-        # self.mQgsFileWidget.setFilePath(self._update_file_path())
-
-        # self.extent_drawer = RectangleMapTool(self.canvas, self)
-        # self.canvas.scaleChanged.connect(self._show_map_canvas_scale)
-        # self.label_n_cells.setText('')
+        self.pb_create_layout.clicked.connect(self._exportATLAS)
+        self.cb_coverageLayer.setFilters(QgsMapLayerProxyModel.PointLayer)
+        self.cb_coverageLayer.layerChanged.connect(self._validateLayer)
+        self.button_LoadStyle.clicked.connect(self._loadStyle)
+        self.button_NewLayer.clicked.connect(self._newLayer)
+        self.mQgsFileWidget.setFilePath(os.path.join(os.environ['USERPROFILE'], 'Downloads'))
+        self.pb_create_layout.setEnabled(False)
         
-        # self.pb_create_layout.setEnabled(False)
-        # self.label_pdf_created.setText('')
-        # self.outputlayer = None
-        # self.outputlayer_id = None
+        self._validateLayer(self.cb_coverageLayer.currentLayer())
         
-        # # self.button_close_help.helpRequested.connect(self._help_requested)
+        # self.button_close_help.helpRequested.connect(self._help_requested)
         # self.dpi = self.choose_dpi.value()
         # self.choose_dpi.valueChanged.connect(self._dpi_changed)
         # self.rejected.connect(self._remove_grid_layer_from_map)
-        # self.set_karteninformationen()
-        # self.toggle_bbox = False
-        # self.pB_bbox.clicked.connect(self.activate_extent_drawer)
-        # self.canvas.extentsChanged.connect(self.extent_drawer.update_nwse)
-        # self.extent_drawer.update_nwse()
         # self.set_tooltips()
 
 
     def set_tooltips(self):
-        # PushButtons
-        self.pB_createGrid.setToolTip("Erstelle ein Gitter gemäss obigen Papiereinstellungen")
-        self.pb_create_layout.setToolTip("Startet die PDF Erstellung")
-        self.pB_bbox.setToolTip("Zeichne ein Rechteck für das zu erstellende Gitter")
-        self.pB_deleteGrid.setToolTip("Löscht den Gitter Layer ")
-        # Combo Boxes
-        self.cb_map_scale.setToolTip("Wähle einen Massstab.\nDas hat einen Einfluss auf die Grösse der Gitterzellen")
-        self.cb_paper_orientation.setToolTip("Wähle eine Papiergrösse und Orientierung.\nDas hat einen Einfluss auf die Grösse UND Ausrichtung der Gitterzellen")
-
+        # # Combo Boxes
+        # self.cb_map_scale.setToolTip("Wähle einen Massstab.\nDas hat einen Einfluss auf die Grösse der Gitterzellen")
+        # self.cb_paper_orientation.setToolTip("Wähle eine Papiergrösse und Orientierung.\nDas hat einen Einfluss auf die Grösse UND Ausrichtung der Gitterzellen")
+        return
 
     def reload(self):
         self._empty_labels()
-        self.mQgsFileWidget.setFilePath(self._update_file_path())
-        self.setGeometry(900,300,500,650)
-        self.set_karteninformationen()
 
     def _print_info(self):
         print(self)
 
     def reject(self):
-        print("Exit Pressed")
+        print("Reject called")
         super().reject()
         self._empty_labels()
         if self.on_window_close is not None:
@@ -154,7 +139,10 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         else:
             self.setStyleSheet('')
     
-    def _validate_Layer(self,layer):
+    def _newLayer(self):
+        pass
+    
+    def _validateLayer(self,layer):
         # Validate layer
         if isinstance(layer, QgsRasterLayer):
             print(f"Coverage layer is a raster layer: {layer.name()}")
@@ -162,33 +150,48 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
             return 0
         elif isinstance(layer, QgsVectorLayer):
             print(f"Number of features in coverage layer: {layer.featureCount()}")
+            self.pb_create_layout.setEnabled(True)
             return 1
         else:
             print("Unsupported layer type")
+            self.statusText.plainText("Unsupported layer type")
             return 0
     
-    def _export_ATLAS(self):
+    def _exportATLAS(self):
         selectedLayer = self.cb_coverageLayer.currentLayer()
-        if self._validate_Layer(selectedLayer):      
-            outPath = self.mQgsFileWidget.filePath()
-            print('exportCallback')
-            print(selectedLayer)
-            self.Atlas_Exporter.export(coverage_layer=selectedLayer,
-                                    export_format='.pdf',
-                                    output_directory=outPath)  
+        # Check if the layer is valid and return immediately if not
+        if self._validateLayer(selectedLayer) == 0:
+            print("Invalid layer or unsupported layer type, export canceled.")
+            return  # Exit the function if the validation fails
         
-    def _coverageLayer_changed(self):
+        outPath = self.mQgsFileWidget.filePath()
+       
+        # Get the selected export format from the combobox as index
+        selected_format = self.cb_formatSelector.currentIndex()
+        
+        # Switch-case equivalent in Python (if-elif-else)
+        if selected_format == 0:
+            export_format = '.pdf'
+        elif selected_format == 1:
+            export_format = '.tiff'
+
+        # Call the AtlasExporter with the selected format
+        self.Atlas_Exporter.export(coverage_layer=selectedLayer,
+                                export_format=export_format,
+                                output_directory=outPath)
+    
+    def _loadStyle(self):
         # get selected layer and load style
         selectedLayer = self.cb_coverageLayer.currentLayer()
-                
-        # Path to the style defintion file
-        style_file_path = os.path.join(self.plugin_dir, 'main', 'templates', 'FhrRaster_ATLAS_StyleDef.qml')
-        
-        # Check if the style file exists
-        if os.path.exists(style_file_path):
-            # Load the style from the QML file
-            selectedLayer.loadNamedStyle(style_file_path)
-            selectedLayer.triggerRepaint()  # Ensure the layer is repainted with the new style
-            print(f"Style applied from {style_file_path}")
-        else:
-            print(f"Style file not found: {style_file_path}")
+        if self._validateLayer(selectedLayer):        
+            # Path to the style defintion file
+            style_file_path = os.path.join(self.plugin_dir, 'main', 'templates', 'FhrRaster_ATLAS_StyleDef.qml')
+            
+            # Check if the style file exists
+            if os.path.exists(style_file_path):
+                # Load the style from the QML file
+                selectedLayer.loadNamedStyle(style_file_path)
+                selectedLayer.triggerRepaint()  # Ensure the layer is repainted with the new style
+                print(f"Style applied from {style_file_path}")
+            else:
+                print(f"Style file not found: {style_file_path}")
