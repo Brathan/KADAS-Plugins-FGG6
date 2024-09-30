@@ -173,9 +173,10 @@ class FhrRasterATLAS:
                 parent=self.iface.mainWindow())
 
     def tab_changed(self):
-        if self._FhrRasterATLAS_Dialog:
-            self.close_FhrRasterATLAS_window()
-        self.iface.actionSaveProject()
+        # if self._FhrRasterATLAS_Dialog:
+        #     self.close_FhrRasterATLAS_window()
+        # self.iface.actionSaveProject()
+        pass
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
