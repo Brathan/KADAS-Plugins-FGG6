@@ -140,21 +140,61 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
             self.setStyleSheet('')
     
     def _newLayer(self):
-        pass
+        print("Adding Layer")
+
+        # Path to your GeoJSON template file
+        source_geojson_file_path = os.path.join(self.plugin_dir, 'main', 'templates', 'RasterDefinition.geojson')
+
+        # Get the directory where the current QGIS project is saved
+        project_path = QgsProject.instance().fileName()
+        if not project_path:
+            print("Project is not saved yet. Please save the project before proceeding.")
+            return
+        
+        # Derive the project directory
+        project_dir = os.path.dirname(project_path)
+
+        # Define the destination path where the GeoJSON file will be copied
+        destination_geojson_file_path = os.path.join(project_dir, 'RasterDefinition.geojson')
+
+        # Copy the GeoJSON file to the project directory
+        try:
+            shutil.copy(source_geojson_file_path, destination_geojson_file_path)
+            print(f"GeoJSON file copied to {destination_geojson_file_path}")
+        except Exception as e:
+            print(f"Failed to copy GeoJSON file: {e}")
+            return
+
+        # Load the copied GeoJSON file as a vector layer
+        geojson_layer = QgsVectorLayer(destination_geojson_file_path, "Raster Definition", "ogr")
+
+        # Check if the layer is valid
+        if not geojson_layer.isValid():
+            print("Failed to load the GeoJSON file!")
+        else:
+            # Add the layer to the current QGIS project
+            QgsProject.instance().addMapLayer(geojson_layer)
+            self._loadStyle(layer=geojson_layer)
+            print("GeoJSON layer successfully added to the map.")
+            self.statusText.setPlainText(f"Definition file saved at: {destination_geojson_file_path}")
+            # Optional: Zoom to the layer extent
+            iface.mapCanvas().setExtent(geojson_layer.extent())
+            iface.mapCanvas().refresh()
     
     def _validateLayer(self,layer):
         # Validate layer
         if isinstance(layer, QgsRasterLayer):
             print(f"Coverage layer is a raster layer: {layer.name()}")
-            # ToDo print to status box
+            self.statusText.setPlainText("⚠ Unsupported layer type")
             return 0
         elif isinstance(layer, QgsVectorLayer):
-            print(f"Number of features in coverage layer: {layer.featureCount()}")
+            txt = f"Number of features in coverage layer: {layer.featureCount()}"
+            self.statusText.setPlainText(txt)
             self.pb_create_layout.setEnabled(True)
+            
             return 1
         else:
-            print("Unsupported layer type")
-            self.statusText.plainText("Unsupported layer type")
+            self.statusText.setPlainText("⚠ Unsupported layer type")
             return 0
     
     def _exportATLAS(self):
@@ -180,18 +220,18 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
                                 export_format=export_format,
                                 output_directory=outPath)
     
-    def _loadStyle(self):
+    def _loadStyle(self,layer=None):
         # get selected layer and load style
-        selectedLayer = self.cb_coverageLayer.currentLayer()
-        if self._validateLayer(selectedLayer):        
+        layer = self.cb_coverageLayer.currentLayer()
+        if self._validateLayer(layer):        
             # Path to the style defintion file
             style_file_path = os.path.join(self.plugin_dir, 'main', 'templates', 'FhrRaster_ATLAS_StyleDef.qml')
             
             # Check if the style file exists
             if os.path.exists(style_file_path):
                 # Load the style from the QML file
-                selectedLayer.loadNamedStyle(style_file_path)
-                selectedLayer.triggerRepaint()  # Ensure the layer is repainted with the new style
+                layer.loadNamedStyle(style_file_path)
+                layer.triggerRepaint()  # Ensure the layer is repainted with the new style
                 print(f"Style applied from {style_file_path}")
             else:
                 print(f"Style file not found: {style_file_path}")
