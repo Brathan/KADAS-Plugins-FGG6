@@ -5,10 +5,11 @@ from PyQt5.QtXml import QDomDocument
 from qgis.PyQt.QtGui import QColor
 
 class AtlasExporter:
-    def __init__(self, dialog):      
+    def __init__(self, dialog,progressBar=None):      
         self.dialog = dialog
         self.project = self.dialog.iface 
         self.manager = QgsProject.instance().layoutManager()
+        self.progressBar = progressBar  # Add a reference to the progress bar
         
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
@@ -42,16 +43,18 @@ class AtlasExporter:
        
 
     def export(self, coverage_layer, export_format, output_directory):
-
         self._get_ATLAS_Layout()
-        
-        print(f"Number of features in coverage layer: {coverage_layer.featureCount()}")
 
+        feature_count = coverage_layer.featureCount()
+        if feature_count == 0:
+            print("No features to export.")
+            return
+        
         atlas = self.ATLAS_layout.atlas()
         atlas.setCoverageLayer(coverage_layer)
         atlas.setEnabled(True)
         atlas.setHideCoverage(True)
-
+    
         map_item = self.ATLAS_layout.itemById('Karte 1')  # Adjust 'Karte 1' to your map item's ID
         if map_item:
             map_item.setAtlasDriven(True)
@@ -63,8 +66,15 @@ class AtlasExporter:
             
             exporter = QgsLayoutExporter(self.ATLAS_layout)
 
+            # Initialize progress bar if available
+            if self.progressBar:
+                self.progressBar.setVisible(True)
+                self.progressBar.setMinimum(0)
+                self.progressBar.setMaximum(feature_count)
+                self.progressBar.setValue(0)
+                
             # Iterate over all features in the coverage layer
-            for feature in coverage_layer.getFeatures():
+            for i, feature in enumerate(coverage_layer.getFeatures()):
                 raster_name = feature['RasterName']  # Retrieve the "RasterName" attribute
                 file_name = os.path.join(output_directory, f'FhrRaster_{raster_name}{export_format}')
 
@@ -92,6 +102,11 @@ class AtlasExporter:
                     print('Unsupported file format')
                     return
 
+                # Update progress bar
+                if self.progressBar:
+                    self.progressBar.setValue(i + 1)
+
+                # Check if export was successful
                 if result == QgsLayoutExporter.Success:
                     print(f"Page exported successfully: {raster_name}")
                 else:
@@ -101,15 +116,6 @@ class AtlasExporter:
 
             # Finish rendering the Atlas
             atlas.endRender()
-            print("Done!")
+            print("Export completed!")
         else:
             print("Map item not found in the layout!")
-
-# ToDo
-# - Check for unsupported file names
-#
-# 
-# 
-# 
-# 
-# 

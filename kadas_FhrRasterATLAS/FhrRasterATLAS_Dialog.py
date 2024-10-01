@@ -1,3 +1,4 @@
+import shutil
 import os
 from pathlib import Path
 from datetime import datetime
@@ -6,6 +7,7 @@ from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 from qgis.PyQt.QtGui import * 
 import qgis
+from qgis.utils import iface
 
 from qgis.core import (Qgis,
                        QgsProject,
@@ -67,7 +69,7 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.plugin_dir = os.path.dirname(__file__)
         
        # Init AtlasExporter
-        self.Atlas_Exporter = AtlasExporter(dialog=self)
+        self.Atlas_Exporter = AtlasExporter(dialog=self,progressBar=self.progressBar)
         
         # Init Components
         self.button_close.clicked.connect(self.reject)
@@ -78,6 +80,7 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.button_NewLayer.clicked.connect(self._newLayer)
         self.mQgsFileWidget.setFilePath(os.path.join(os.environ['USERPROFILE'], 'Downloads'))
         self.pb_create_layout.setEnabled(False)
+        self.progressBar.setVisible(False)
         
         self._validateLayer(self.cb_coverageLayer.currentLayer())
         
@@ -198,27 +201,34 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
             return 0
     
     def _exportATLAS(self):
-        selectedLayer = self.cb_coverageLayer.currentLayer()
-        # Check if the layer is valid and return immediately if not
-        if self._validateLayer(selectedLayer) == 0:
-            print("Invalid layer or unsupported layer type, export canceled.")
-            return  # Exit the function if the validation fails
+        # Disable the entire dialog while exporting
+        self.setEnabled(False)
         
-        outPath = self.mQgsFileWidget.filePath()
-       
-        # Get the selected export format from the combobox as index
-        selected_format = self.cb_formatSelector.currentIndex()
+        try:
+            selectedLayer = self.cb_coverageLayer.currentLayer()
+            # Check if the layer is valid and return immediately if not
+            if self._validateLayer(selectedLayer) == 0:
+                print("Invalid layer or unsupported layer type, export canceled.")
+                return  # Exit the function if the validation fails
+            
+            outPath = self.mQgsFileWidget.filePath()
         
-        # Switch-case equivalent in Python (if-elif-else)
-        if selected_format == 0:
-            export_format = '.pdf'
-        elif selected_format == 1:
-            export_format = '.tiff'
+            # Get the selected export format from the combobox as index
+            selected_format = self.cb_formatSelector.currentIndex()
+            
+            # Switch-case equivalent in Python (if-elif-else)
+            if selected_format == 0:
+                export_format = '.pdf'
+            elif selected_format == 1:
+                export_format = '.tiff'
 
-        # Call the AtlasExporter with the selected format
-        self.Atlas_Exporter.export(coverage_layer=selectedLayer,
-                                export_format=export_format,
-                                output_directory=outPath)
+            # Call the AtlasExporter with the selected format
+            self.Atlas_Exporter.export(coverage_layer=selectedLayer,
+                                    export_format=export_format,
+                                    output_directory=outPath) 
+        finally:
+            # Re-enable the dialog after the export is done
+            self.setEnabled(True)
     
     def _loadStyle(self,layer=None):
         # get selected layer and load style
