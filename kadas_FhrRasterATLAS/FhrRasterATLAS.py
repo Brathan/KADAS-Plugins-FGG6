@@ -159,13 +159,13 @@ class FhrRasterATLAS:
         # will be set False in run()
         self.first_start = True 
         if self.is_kadas:
-            self.actionFhrRasterATLAS = QAction(QIcon(os.path.join(self.tr(self.plugin_dir), "icons","FhrRasterATLAS_icon.png")), "FhrRaster Atlas", self.iface.mainWindow(), toggled=self.run)
+            self.actionFhrRasterATLAS = QAction(QIcon(os.path.join(self.tr(self.plugin_dir), "FhrRasterATLAS_icon.png")), "FhrRaster Atlas", self.iface.mainWindow(), toggled=self.run)
             self.actionFhrRasterATLAS.setCheckable(True)
 
             self.iface.addAction(self.actionFhrRasterATLAS, self.iface.PLUGIN_MENU,self.iface.CUSTOM_TAB, "&FGG6")
             self.iface.getRibbonWidget().currentChanged.connect(self.tab_changed)
         else:
-            icon_path = os.path.join(self.tr(self.plugin_dir), "icons","FhrRasterATLAS_icon.png")
+            icon_path = os.path.join(self.tr(self.plugin_dir),"FhrRasterATLAS_icon.png")
             self.add_action(
                 icon_path,
                 text=self.tr(u'Export multiple Fhr Raster'),
@@ -211,7 +211,7 @@ class FhrRasterATLAS:
                                                             iface=self.iface)
             else:
                 self._FhrRasterATLAS_Dialog = FhrRasterATLAS_Dialog(self, self.iface.mainWindow(),iface=self.iface)
-            self._FhrRasterATLAS_Dialog.setWindowIcon(QIcon(os.path.join(self.tr(self.plugin_dir), "icons","FhrRasterATLAS_icon.png")))
+            self._FhrRasterATLAS_Dialog.setWindowIcon(QIcon(os.path.join(self.tr(self.plugin_dir),"FhrRasterATLAS_icon.png")))
 
         # self._FhrRasterATLAS_Dialog.reload()
         

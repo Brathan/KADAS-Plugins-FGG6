@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/FhrRasterATLAS">
+        <file>FhrRasterATLAS_icon.png</file>
+    </qresource>
+</RCC>
