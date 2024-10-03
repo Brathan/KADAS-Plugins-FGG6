@@ -42,7 +42,7 @@ class AtlasExporter:
         print('...done')    
        
 
-    def export(self, coverage_layer, export_format, output_directory):
+    def export(self, coverage_layer, export_format, output_directory,prefix=None,suffix=None):
         self._get_ATLAS_Layout()
 
         feature_count = coverage_layer.featureCount()
@@ -76,7 +76,12 @@ class AtlasExporter:
             # Iterate over all features in the coverage layer
             for i, feature in enumerate(coverage_layer.getFeatures()):
                 raster_name = feature['RasterName']  # Retrieve the "RasterName" attribute
-                file_name = os.path.join(output_directory, f'FhrRaster_{raster_name}{export_format}')
+                
+                # Apply prefix and suffix to the file name with underscores
+                prefix_part = f"{prefix}_" if prefix else ""
+                suffix_part = f"_{suffix}" if suffix else ""
+                file_name = f"{prefix_part}FhrRaster_{raster_name}{suffix_part}{export_format}"
+                full_file_name = os.path.join(output_directory, file_name)
 
                 if export_format == '.pdf':
                     export_settings = QgsLayoutExporter.PdfExportSettings()
@@ -85,7 +90,7 @@ class AtlasExporter:
                                             QgsLayoutRenderContext.FlagAntialiasing |
                                             QgsLayoutRenderContext.FlagUseAdvancedEffects)
                     
-                    result = exporter.exportToPdf(file_name, export_settings)
+                    result = exporter.exportToPdf(full_file_name, export_settings)
                 elif export_format == '.tiff':
                     export_settings = QgsLayoutExporter.ImageExportSettings()
                     # hide Coverage
@@ -97,7 +102,7 @@ class AtlasExporter:
                     export_settings.imageFormat = 'tiff'
                     export_settings.backgroundColor = QColor(0, 0, 0, 0)  # RGBA where A = 0 means fully transparent
                     export_settings.writeWorldFile = True
-                    result = exporter.exportToImage(file_name, export_settings)
+                    result = exporter.exportToImage(full_file_name, export_settings)
                 else:
                     print('Unsupported file format')
                     return

@@ -8,6 +8,7 @@ from qgis.PyQt import QtWidgets
 from qgis.PyQt.QtGui import * 
 import qgis
 from qgis.utils import iface
+from qgis.PyQt.QtGui import QColor
 
 from qgis.core import (Qgis,
                        QgsProject,
@@ -151,7 +152,8 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         # Get the directory where the current QGIS project is saved
         project_path = QgsProject.instance().fileName()
         if not project_path:
-            print("Project is not saved yet. Please save the project before proceeding.")
+            self.statusText.setTextColor(QColor("red"))
+            self.statusText.setText("Project is not saved yet. Please save the project before proceeding.")
             return
         
         # Derive the project directory
@@ -179,7 +181,7 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
             QgsProject.instance().addMapLayer(geojson_layer)
             self._loadStyle(layer=geojson_layer)
             print("GeoJSON layer successfully added to the map.")
-            self.statusText.setPlainText(f"Definition file saved at: {destination_geojson_file_path}")
+            self.statusText.setText(f"- Definition file saved at: {destination_geojson_file_path}")
             # Optional: Zoom to the layer extent
             iface.mapCanvas().setExtent(geojson_layer.extent())
             iface.mapCanvas().refresh()
@@ -188,16 +190,19 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         # Validate layer
         if isinstance(layer, QgsRasterLayer):
             print(f"Coverage layer is a raster layer: {layer.name()}")
-            self.statusText.setPlainText("⚠ Unsupported layer type")
+            self.statusText.setTextColor(QColor("red"))
+            self.statusText.setText("⚠ Unsupported layer type")
             return 0
         elif isinstance(layer, QgsVectorLayer):
             txt = f"Number of features in coverage layer: {layer.featureCount()}"
-            self.statusText.setPlainText(txt)
+            #self.statusText.setStyleSheet("color: blue")
+            self.statusText.setText(txt)
             self.pb_create_layout.setEnabled(True)
             
             return 1
         else:
-            self.statusText.setPlainText("⚠ Unsupported layer type")
+            self.statusText.setTextColor(QColor("red"))
+            self.statusText.setText("Unsupported layer type")
             return 0
     
     def _exportATLAS(self):
@@ -212,6 +217,11 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
                 return  # Exit the function if the validation fails
             
             outPath = self.mQgsFileWidget.filePath()
+            # Check if the outPath is valid
+            if not os.path.exists(outPath) or not os.path.isdir(outPath):
+                self.statusText.setTextColor(QColor("red"))
+                self.statusText.setText(" Invalid output directory, export canceled.")
+                return  # Exit the function if the output directory is not valid
         
             # Get the selected export format from the combobox as index
             selected_format = self.cb_formatSelector.currentIndex()
@@ -221,7 +231,19 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
                 export_format = '.pdf'
             elif selected_format == 1:
                 export_format = '.tiff'
+                
+            # Retrieve the prefix and suffix from the input fields 
+            prefix = self.prefixLineEdit.text() if self.prefixLineEdit else None
+            suffix = self.suffixLineEdit.text() if self.suffixLineEdit else None
 
+            # Call the AtlasExporter with the selected format, including prefix and suffix
+            self.Atlas_Exporter.export(
+                coverage_layer=selectedLayer,
+                export_format=export_format,
+                output_directory=outPath,
+                prefix=prefix,
+                suffix=suffix)
+    
             # Call the AtlasExporter with the selected format
             self.Atlas_Exporter.export(coverage_layer=selectedLayer,
                                     export_format=export_format,
