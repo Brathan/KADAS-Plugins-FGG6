@@ -42,14 +42,24 @@ class AtlasExporter:
         print('...done')    
        
 
-    def export(self, coverage_layer, export_format, output_directory,prefix=None,suffix=None):
+    def export(self, coverage_layer, export_format,one_file, output_directory,filename=None,prefix=None,suffix=None):
         self._get_ATLAS_Layout()
 
         feature_count = coverage_layer.featureCount()
         if feature_count == 0:
             print("No features to export.")
             return
-        
+        # If one_file is True, set feature count to 0 for progressbar 
+        if one_file:
+            feature_count = 0
+            
+        # Initialize progress bar if available
+        if self.progressBar:
+            self.progressBar.setVisible(True)
+            self.progressBar.setMinimum(0)
+            self.progressBar.setMaximum(feature_count)
+            self.progressBar.setValue(0)
+                    
         atlas = self.ATLAS_layout.atlas()
         atlas.setCoverageLayer(coverage_layer)
         atlas.setEnabled(True)
@@ -59,65 +69,93 @@ class AtlasExporter:
         if map_item:
             map_item.setAtlasDriven(True)
 
-            # Start rendering the Atlas
+            # # Start rendering the Atlas
             atlas.beginRender()
-            atlas.first()
             atlas.setHideCoverage(True)
             
             exporter = QgsLayoutExporter(self.ATLAS_layout)
 
-            # Initialize progress bar if available
-            if self.progressBar:
-                self.progressBar.setVisible(True)
-                self.progressBar.setMinimum(0)
-                self.progressBar.setMaximum(feature_count)
-                self.progressBar.setValue(0)
+            # If one_file is True, export all atlas pages to a single PDF
+            if one_file:
+                full_file_name = os.path.join(output_directory,filename + '.pdf')
+                pdf_export_settings = QgsLayoutExporter.PdfExportSettings()
                 
-            # Iterate over all features in the coverage layer
-            for i, feature in enumerate(coverage_layer.getFeatures()):
-                raster_name = feature['RasterName']  # Retrieve the "RasterName" attribute
+                # hide Coverage
+                pdf_export_settings.flags = QgsLayoutRenderContext.Flag(QgsLayoutRenderContext.FlagHideCoverageLayer |                              
+                                        QgsLayoutRenderContext.FlagAntialiasing |
+                                        QgsLayoutRenderContext.FlagUseAdvancedEffects)
                 
-                # Apply prefix and suffix to the file name with underscores
-                prefix_part = f"{prefix}_" if prefix else ""
-                suffix_part = f"_{suffix}" if suffix else ""
-                file_name = f"{prefix_part}FhrRaster_{raster_name}{suffix_part}{export_format}"
-                full_file_name = os.path.join(output_directory, file_name)
+                # Export the atlas to a single PDF file
+                print(f"Exporting to: {full_file_name}")
+                result = exporter.exportToPdf(self.ATLAS_layout.atlas(), full_file_name, pdf_export_settings)
 
-                if export_format == '.pdf':
-                    export_settings = QgsLayoutExporter.PdfExportSettings()
-                    # hide Coverage
-                    export_settings.flags = QgsLayoutRenderContext.Flag(QgsLayoutRenderContext.FlagHideCoverageLayer |                              
-                                            QgsLayoutRenderContext.FlagAntialiasing |
-                                            QgsLayoutRenderContext.FlagUseAdvancedEffects)
+                # Unpack the tuple result
+                result_code, result_message = result
+
+                # Check the result code
+                if result_code == 0:
+                    print("Export successful!")
+                elif result_code == 1:
+                    print("Export canceled by the user.")
+                elif result_code == 4:
+                    print("File error occurred during export.")
+                else:
+                    print(f"Unknown result code: {result_code}, Message: {result_message}")
+                
+                self.progressBar.setMaximum(100)
+                self.progressBar.setValue(100)
+                
+            else:                      
+                # set first feature
+                atlas.first()
+                                
+                # Iterate over all features in the coverage layer
+                for i, feature in enumerate(coverage_layer.getFeatures()):
+                    raster_name = feature['RasterName']  # Retrieve the "RasterName" attribute
                     
-                    result = exporter.exportToPdf(full_file_name, export_settings)
-                elif export_format == '.tiff':
-                    export_settings = QgsLayoutExporter.ImageExportSettings()
-                    # hide Coverage
-                    export_settings.flags = QgsLayoutRenderContext.Flag(QgsLayoutRenderContext.FlagHideCoverageLayer |                              
-                                            QgsLayoutRenderContext.FlagAntialiasing |
-                                            QgsLayoutRenderContext.FlagUseAdvancedEffects)
-                    # image settings
-                    export_settings.dpi = 300
-                    export_settings.imageFormat = 'tiff'
-                    export_settings.backgroundColor = QColor(0, 0, 0, 0)  # RGBA where A = 0 means fully transparent
-                    export_settings.writeWorldFile = True
-                    result = exporter.exportToImage(full_file_name, export_settings)
-                else:
-                    print('Unsupported file format')
-                    return
+                    # Apply prefix and suffix to the file name
+                    file_name = f"{prefix}{raster_name}{suffix}{export_format}"
+                    full_file_name = os.path.join(output_directory, file_name)
 
-                # Update progress bar
-                if self.progressBar:
-                    self.progressBar.setValue(i + 1)
+                    if export_format == '.pdf':
+                        pdf_export_settings = QgsLayoutExporter.PdfExportSettings()
+                        # hide Coverage
+                        pdf_export_settings.flags = QgsLayoutRenderContext.Flag(QgsLayoutRenderContext.FlagHideCoverageLayer |                              
+                                                QgsLayoutRenderContext.FlagAntialiasing |
+                                                QgsLayoutRenderContext.FlagUseAdvancedEffects)
+                        
+                        result = exporter.exportToPdf(full_file_name, pdf_export_settings)
+                        
+                    elif export_format == '.tiff':
+                        image_export_settings = QgsLayoutExporter.ImageExportSettings()
+                        # hide Coverage
+                        image_export_settings.flags = QgsLayoutRenderContext.Flag(QgsLayoutRenderContext.FlagHideCoverageLayer |                              
+                                                QgsLayoutRenderContext.FlagAntialiasing |
+                                                QgsLayoutRenderContext.FlagUseAdvancedEffects)
+                        # image settings
+                        image_export_settings.dpi = 300
+                        image_export_settings.imageFormat = 'tiff'
+                        image_export_settings.backgroundColor = QColor(0, 0, 0, 0)  # RGBA where A = 0 means fully transparent
+                        image_export_settings.writeWorldFile = True
+                        # export
+                        result = exporter.exportToImage(full_file_name, image_export_settings)
+                    else:
+                        print('Unsupported file format')
+                        return
 
-                # Check if export was successful
-                if result == QgsLayoutExporter.Success:
-                    print(f"Page exported successfully: {raster_name}")
-                else:
-                    print(f"Failed to export page: {raster_name}")
+                    # Update progress bar
+                    if self.progressBar:
+                        self.progressBar.setValue(i + 1)
 
-                atlas.next()
+                    # Check if export was successful
+                    print(result)
+                    if result == QgsLayoutExporter.Success:
+                        print(f"Page exported successfully: {full_file_name}")
+                    else:
+                        print(f"Failed to export page: {raster_name}")
+
+                    # set next feature
+                    atlas.next()
 
             # Finish rendering the Atlas
             atlas.endRender()

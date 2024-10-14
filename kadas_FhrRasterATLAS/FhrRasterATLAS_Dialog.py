@@ -79,6 +79,7 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         self.cb_coverageLayer.layerChanged.connect(self._validateLayer)
         self.button_LoadStyle.clicked.connect(self._loadStyle)
         self.button_NewLayer.clicked.connect(self._newLayer)
+        self.cb_formatSelector.currentIndexChanged.connect(self._format_changed)
         self.mQgsFileWidget.setFilePath(os.path.join(os.environ['USERPROFILE'], 'Downloads'))
         self.pb_create_layout.setEnabled(False)
         self.progressBar.setVisible(False)
@@ -225,29 +226,32 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
         
             # Get the selected export format from the combobox as index
             selected_format = self.cb_formatSelector.currentIndex()
-            
-            # Switch-case equivalent in Python (if-elif-else)
+    
             if selected_format == 0:
                 export_format = '.pdf'
+                one_file = True
             elif selected_format == 1:
+                export_format = '.pdf'
+                one_file = False
+            elif selected_format == 2:
                 export_format = '.tiff'
+                one_file = False
                 
-            # Retrieve the prefix and suffix from the input fields 
+            # Retrieve the input fields 
             prefix = self.prefixLineEdit.text() if self.prefixLineEdit else None
             suffix = self.suffixLineEdit.text() if self.suffixLineEdit else None
-
+            filename = self.rasternameLineEdit.text() if self.rasternameLineEdit else None
+            
             # Call the AtlasExporter with the selected format, including prefix and suffix
             self.Atlas_Exporter.export(
                 coverage_layer=selectedLayer,
                 export_format=export_format,
+                one_file=one_file,
                 output_directory=outPath,
+                filename=filename,
                 prefix=prefix,
                 suffix=suffix)
     
-            # Call the AtlasExporter with the selected format
-            self.Atlas_Exporter.export(coverage_layer=selectedLayer,
-                                    export_format=export_format,
-                                    output_directory=outPath) 
         finally:
             # Re-enable the dialog after the export is done
             self.setEnabled(True)
@@ -267,3 +271,22 @@ class FhrRasterATLAS_Dialog(QtWidgets.QDialog, FORM_CLASS):
                 print(f"Style applied from {style_file_path}")
             else:
                 print(f"Style file not found: {style_file_path}")
+    
+    def _format_changed(self,index):
+        # Set visibility of suffix and preffix edit fields
+        if index == 0:
+            self.prefixLabel.setEnabled(False)
+            self.prefixLineEdit.setEnabled(False)
+            self.suffixLabel.setEnabled(False)
+            self.suffixLineEdit.setEnabled(False)
+            self.rasternameLineEdit.setEnabled(True)
+            self.rasternameLabel.setEnabled(True)
+            self.rasternameLineEdit.setText('FhrRaster')
+        elif index > 0:
+            self.prefixLabel.setEnabled(True)
+            self.prefixLineEdit.setEnabled(True)
+            self.suffixLabel.setEnabled(True)
+            self.suffixLineEdit.setEnabled(True)
+            self.rasternameLineEdit.setEnabled(False)
+            self.rasternameLabel.setEnabled(False)
+            self.rasternameLineEdit.setText('%RASTERNAME%')
