@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
-    <height>348</height>
+    <width>489</width>
+    <height>305</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,33 +26,26 @@
    <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0">
-   <item row="5" column="1">
-    <widget class="QLabel" name="label_Export">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="20" column="2" colspan="2">
+    <widget class="QPushButton" name="pb_create_layout">
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Das ist der Tooltip für das Erstellen von PDF</string>
+     </property>
+     <property name="toolTipDuration">
+      <number>7</number>
      </property>
      <property name="text">
-      <string>Export nach:</string>
+      <string>Export</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="3">
-    <widget class="QgsFileWidget" name="mQgsFileWidget">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="storageMode">
-      <enum>QgsFileWidget::GetDirectory</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="18" column="1" colspan="3">
+   <item row="19" column="1" colspan="3">
     <widget class="QProgressBar" name="progressBar">
      <property name="enabled">
       <bool>true</bool>
@@ -68,37 +61,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
-    <widget class="QPushButton" name="button_LoadStyle">
-     <property name="text">
-      <string>Lade Stil für Definitions-Layer</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QLabel" name="statusLabel">
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="text">
-      <string>Status:</string>
-     </property>
-     <property name="textFormat">
-      <enum>Qt::RichText</enum>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-     </property>
-    </widget>
-   </item>
-   <item row="19" column="1">
-    <widget class="QPushButton" name="button_close">
-     <property name="text">
-      <string>Schliessen</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1" colspan="3">
+   <item row="10" column="1" colspan="3">
     <widget class="QTextEdit" name="statusText">
      <property name="minimumSize">
       <size>
@@ -124,12 +87,69 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="button_NewLayer">
+   <item row="9" column="1">
+    <widget class="QLabel" name="statusLabel">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
      <property name="text">
-      <string>Erstelle neuen Definitions-Layer</string>
+      <string>Status:</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
      </property>
     </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="label_Layer">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>Wähle Definitions-Layer:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="1">
+    <widget class="QPushButton" name="button_close">
+     <property name="text">
+      <string>Schliessen</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="button_LoadStyle">
+     <property name="text">
+      <string>Lade Stil für Definitions-Layer</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="QgsMapLayerComboBox" name="cb_coverageLayer"/>
    </item>
    <item row="7" column="1" colspan="3">
     <widget class="QGroupBox" name="groupBox">
@@ -142,7 +162,7 @@ p, li { white-space: pre-wrap; }
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>90</height>
+       <height>120</height>
       </size>
      </property>
      <property name="title">
@@ -152,45 +172,10 @@ p, li { white-space: pre-wrap; }
       <property name="topMargin">
        <number>0</number>
       </property>
-      <item row="3" column="2">
-       <widget class="QLineEdit" name="suffixLineEdit">
+      <item row="1" column="1">
+       <widget class="QLabel" name="rasternameLabel">
         <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="clearButtonEnabled">
          <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="exportformatText">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Exportformat:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="suffixLabel">
-        <property name="enabled">
-         <bool>false</bool>
         </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -205,29 +190,10 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>Suffix:</string>
+         <string>Dateiname:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="rasternameLineEdit">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>90</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>FhrRaster</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -295,6 +261,44 @@ p, li { white-space: pre-wrap; }
         </item>
        </widget>
       </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="rasternameLineEdit">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>90</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>FhrRaster</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="exportformatText">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Exportformat:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="prefixLabel">
         <property name="enabled">
@@ -320,10 +324,10 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="rasternameLabel">
+      <item row="1" column="2">
+       <widget class="QLabel" name="suffixLabel">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -338,68 +342,67 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>Dateiname:</string>
+         <string>Suffix:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignBottom|Qt::AlignHCenter</set>
         </property>
        </widget>
       </item>
+      <item row="3" column="2">
+       <widget class="QLineEdit" name="suffixLineEdit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_Export">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Export nach:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="2">
+       <widget class="QgsFileWidget" name="mQgsFileWidget">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="storageMode">
+         <enum>QgsFileWidget::GetDirectory</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="19" column="2" colspan="2">
-    <widget class="QPushButton" name="pb_create_layout">
-     <property name="font">
-      <font>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Das ist der Tooltip für das Erstellen von PDF</string>
-     </property>
-     <property name="toolTipDuration">
-      <number>7</number>
-     </property>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="button_NewLayer">
      <property name="text">
-      <string>Export</string>
+      <string>Erstelle neuen Definitions-Layer</string>
      </property>
     </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="label_Layer">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>150</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>200</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>Wähle Definitions-Layer:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2" colspan="2">
-    <widget class="QgsMapLayerComboBox" name="cb_coverageLayer"/>
    </item>
   </layout>
  </widget>
