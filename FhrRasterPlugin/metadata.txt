@@ -1,0 +1,24 @@
+[general]
+name=Führungsraster Schweiz
+qgisMinimumVersion=3.0
+qgisMaximumVersion=3.99
+description=Erstellen von Führungsrasterkarten 
+about= Plugin that can be used in QGIS or in KADAS to create Führungsrasterkarten that are based on a standardized grid.
+version=0.1.0
+author=Hptm Gyger Nathan
+email=nathan@gygers.ch
+
+
+changelog=
+ Rev 0.0.1 (09.11.2024)
+  - Initial release
+
+# Tags are comma separated with spaces allowed
+tags=
+
+homepage=
+tracker=
+repository=
+icon=icons/FhrRasterATLAS_icon.png
+experimental=False
+deprecated=False
