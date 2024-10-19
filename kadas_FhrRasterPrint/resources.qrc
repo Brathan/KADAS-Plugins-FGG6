@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/kadas_FhrRasterPrint" >
-        <file>icons/FührungsRaster_Icon.png</file>
-    </qresource>
-</RCC>

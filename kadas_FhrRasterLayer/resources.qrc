@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/kadas_RasterkarteLayer" >
-        <file>icons/FührungsRasterSchweiz_Icon.png</file>
-    </qresource>
-</RCC>
