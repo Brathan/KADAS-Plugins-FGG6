@@ -1733,7 +1733,7 @@
        </Option>
        <Option name="dataDefinedMapGridLabelDistance" type="Map">
         <Option name="active" type="bool" value="true"/>
-        <Option name="expression" type="QString" value="CASE&#xd;&#xa;WHEN round(@map_scale) = 25000 THEN 1&#xd;&#xa;WHEN round(@map_scale) =  5000 THEN 2&#xd;&#xa;WHEN round(@map_scale) =  2000 THEN 2&#xd;&#xa;ELSE 3&#xd;&#xa;END"/>
+        <Option name="expression" type="QString" value="CASE&#xd;&#xa;WHEN round(@map_scale) = 25000 THEN 1&#xd;&#xa;WHEN round(@map_scale) =  5000 THEN 1&#xd;&#xa;WHEN round(@map_scale) =  2000 THEN 2&#xd;&#xa;ELSE 3&#xd;&#xa;END"/>
         <Option name="type" type="int" value="3"/>
        </Option>
        <Option name="dataDefinedMapGridOffsetX" type="Map">
