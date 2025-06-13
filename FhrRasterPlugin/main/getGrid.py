@@ -60,7 +60,7 @@ def get50m(gridNumber,xy):
     else:      
         # Perform calculations for y
         quot50m = ((gridNumber - 25) % 10000) / 100 # input grid has 25m offset
-        return f"{quot50m:02.1f}"  # Ensures two digits before the decimal point and one after
+        return "{:04.1f}".format(quot50m) # Ensures two digits before the decimal point and one after
         
 @qgsfunction(args='auto', group='Custom')            
 def getGrid(gridNumber,gridSize,xy, feature, parent):
