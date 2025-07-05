@@ -13,6 +13,10 @@ from qgis.PyQt.QtWidgets import QAction
 # Import the code for the dialog
 from .FhrRasterATLAS_Dialog import FhrRasterATLAS_Dialog
 
+# Import the custom attribute editor
+from .main.AttributeEditor import init_attribute_editor_tool
+
+
 # from kadas.kadascore import *
 # from kadas.kadasgui import *
 # from kadas.kadasanalysis import *
@@ -72,6 +76,11 @@ class FhrRasterPlugin:
             self.actionFhrRasterATLAS.setCheckable(True)
             self.iface.addAction(self.actionFhrRasterATLAS, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
 
+            print('*** Adding Attribute Editor Tool')
+            self.actionAttributeEditor = QAction(QIcon(os.path.join(self.tr(self.plugin_dir), 'icons', 'AttributeEditor_icon.svg')),self.tr("Edit Atlas"))
+            self.actionAttributeEditor.triggered.connect(self.__run_attribute_editor)
+            self.iface.addAction(self.actionAttributeEditor, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
+
             print('*** Adding FhrRaster Layer')
             self.actionFhrRasterLayer = QAction(QIcon(os.path.join(self.tr(self.plugin_dir), 'icons','FhrRasterLayer_icon.png')), self.tr("FhrRaster Layer"))
             self.actionFhrRasterLayer.triggered.connect(self.__run_layer)
@@ -102,9 +111,10 @@ class FhrRasterPlugin:
     def unload(self):
         # Remove all actions
         if self.is_kadas:
-            self.iface.removeAction(self.actionFhrRasterLayer, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
-            self.iface.removeAction(self.actionFhrRasterPrint, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
-            self.iface.removeAction(self.actionFhrRasterATLAS, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
+            self.iface.removeAction(self.actionFhrRasterLayer,  self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
+            self.iface.removeAction(self.actionFhrRasterPrint,  self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
+            self.iface.removeAction(self.actionFhrRasterATLAS,  self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
+            self.iface.removeAction(self.actionAttributeEditor, self.iface.PLUGIN_MENU, self.iface.CUSTOM_TAB, "&FGG6")
         else:
             for action in self.actions:
                 self.iface.removePluginMenu(
@@ -142,6 +152,11 @@ class FhrRasterPlugin:
                 layout.setName(layout_name)
                 project.layoutManager().addLayout(layout)
         self.iface.showLayoutDesigner(layout)
+    
+    def __run_attribute_editor(self):
+        from .main.AttributeEditor import show_attribute_editor_tool
+        show_attribute_editor_tool(self.iface)
+
 
     def run_atlas(self, toggle_state):
         if self.is_kadas:
